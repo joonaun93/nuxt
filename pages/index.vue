@@ -6,13 +6,6 @@ import { storeToRefs } from "pinia";
 
 const dashboard = useDashboard();
 const { kpis, chartData } = storeToRefs(dashboard);
-
-/* dummy data – you can swap these with Pinia or fetch() later */
-// const kpis = [
-//   { label: "Total tCO₂e", value: 12_450, unit: "t" },
-//   { label: "Projects", value: 37 },
-//   { label: "Data Quality %", value: 96, unit: "%" },
-// ];
 </script>
 
 <template>
@@ -26,6 +19,6 @@ const { kpis, chartData } = storeToRefs(dashboard);
     </section>
 
     <!-- Chart slot -->
-    <LineChart />
+    <LineChart :data="chartData" />
   </div>
 </template>
