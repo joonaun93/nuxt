@@ -54,20 +54,17 @@ const chartData = computed(() => ({
 
 const options = {
   responsive: true,
-  maintainAspectRatio: false,
+  maintainAspectRatio: true,
 };
 
 // 5. Expose resize() to parent
-defineExpose({
-  resize: () => chartRef.value?.chart?.resize(),
-});
+// defineExpose({
+//   resize: () => chartRef.value?.chart?.resize(),
+// });
 </script>
 
 <template>
-  <Line
-    ref="chartRef"
-    :data="chartData"
-    :options="options"
-    class="h-72 w-full rounded-xl bg-white shadow px-4 py-3"
-  />
+  <div class="relative w-3/4 mx-auto rounded-xl bg-white shadow px-4 py-3">
+    <Line ref="chartRef" :data="chartData" :options="options" />
+  </div>
 </template>

@@ -18,6 +18,10 @@ const { kpis, chartData } = storeToRefs(dashboard);
       <KpiCard v-for="k in kpis" :key="k.label" v-bind="k" />
     </section>
 
+    <!-- <section>
+      <KpiCardOptions label="Total tCO₂e" value="12,450" unit="t" />
+    </section> -->
+
     <!-- Chart slot -->
     <LineChart :data="chartData" />
   </div>
