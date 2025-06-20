@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import KpiCard from "@/components/KpiCardComposition.vue";
 import LineChart from "@/components/LineChart.vue";
+import { useDashboard } from "@/stores/dashboard";
+import { storeToRefs } from "pinia";
+
+const dashboard = useDashboard();
+const { kpis, chartData } = storeToRefs(dashboard);
 
 /* dummy data – you can swap these with Pinia or fetch() later */
-const kpis = [
-  { label: "Total tCO₂e", value: 12_450, unit: "t" },
-  { label: "Projects", value: 37 },
-  { label: "Data Quality %", value: 96, unit: "%" },
-];
+// const kpis = [
+//   { label: "Total tCO₂e", value: 12_450, unit: "t" },
+//   { label: "Projects", value: 37 },
+//   { label: "Data Quality %", value: 96, unit: "%" },
+// ];
 </script>
 
 <template>
