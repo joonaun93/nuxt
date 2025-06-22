@@ -64,7 +64,14 @@ const options = {
 </script>
 
 <template>
-  <div class="relative w-3/4 mx-auto rounded-xl bg-white shadow px-4 py-3">
-    <Line ref="chartRef" :data="chartData" :options="options" />
+  <div
+    class="w-full sm:w-3/4 mx-auto aspect-w-16 aspect-h-9 rounded-xl bg-white shadow p-4"
+  >
+    <Line
+      ref="chartRef"
+      class="w-full h-full"
+      :data="chartData"
+      :options="options"
+    />
   </div>
 </template>
