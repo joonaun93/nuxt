@@ -14,9 +14,9 @@ const { kpis, chartData } = storeToRefs(dashboard);
     <h1 class="text-2xl font-semibold">ESG Overview</h1>
 
     <!-- KPI grid -->
-    <section class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <KpiCard v-for="k in kpis" :key="k.label" v-bind="k" />
-    </section>
+    </div>
 
     <!-- <section>
       <KpiCardOptions label="Total tCO₂e" value="12,450" unit="t" />

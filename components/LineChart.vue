@@ -13,7 +13,7 @@ import {
   Filler,
 } from "chart.js";
 
-// 1. Register Chart.js modules
+// Register Chart.js modules
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -25,36 +25,65 @@ ChartJS.register(
   Filler
 );
 
-// 2. Props
+/* ---------- types ---------- */
+type EmissionMonth = {
+  month: string;
+  s1: number;
+  s2: number;
+  s3: number;
+};
+
+const scopeKeys = ["s1", "s2", "s3"] as const;
+type ScopeKey = (typeof scopeKeys)[number]; // "s1" | "s2" | "s3"
+
+/* ─── props ─────────────────────────────────────── */
 const props = defineProps<{
-  data: { month: string; value: number }[];
+  data: EmissionMonth[];
 }>();
 
-// 3. Chart instance ref
+/* ─── chart instance ref ─────────────────────────── */
 const chartRef = ref<InstanceType<typeof Line> | null>(null);
 
-// 4. Reactive data & options
-const chartData = computed(() => ({
-  labels: props.data.map((d) => d.month),
-  datasets: [
-    {
-      label: "Emissions (tCO₂e)",
-      data: props.data.map((d) => d.value),
-      fill: true,
-      tension: 0.3,
-      backgroundColor: (ctx) => {
-        const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 300);
-        g.addColorStop(0, "rgba(59,130,246,0.4)"); // tailwind blue-500 @ 40%
-        g.addColorStop(1, "rgba(59,130,246,0)");
-        return g;
-      },
-    },
-  ],
-}));
+/* ─── palette helper ─────────────────────────────── */
+const scopeColors = [
+  { stroke: "rgb(34, 197, 94)", fill: "rgba(34, 197, 94,0.15)" }, // s1  green-500
+  { stroke: "rgb(59, 130, 246)", fill: "rgba(59, 130, 246,0.15)" }, // s2  blue-500
+  { stroke: "rgb(244, 114, 182)", fill: "rgba(244, 114, 182,0.15)" }, // s3  pink-400
+];
+
+/* ─── reactive data ──────────────────────────────── */
+const chartData = computed(() => {
+  const labels = props.data.map((d) => d.month);
+
+  const datasets = scopeKeys.map((key: ScopeKey, idx: number) => ({
+    label: `Scope ${idx + 1}`,
+    data: props.data.map((d) => d[key]),
+    borderColor: scopeColors[idx].stroke,
+    backgroundColor: scopeColors[idx].fill,
+    borderWidth: 2,
+    tension: 0.3,
+    fill: true,
+    pointRadius: 3,
+  }));
+
+  return { labels, datasets };
+});
 
 const options = {
   responsive: true,
   maintainAspectRatio: true,
+  interaction: { mode: "index", intersect: false },
+  plugins: {
+    legend: { position: "bottom" },
+    tooltip: {
+      callbacks: {
+        label: (ctx) => `${ctx.dataset.label}: ${ctx.formattedValue} t`,
+      },
+    },
+  },
+  scales: {
+    y: { ticks: { callback: (v) => v + " t" } },
+  },
 };
 
 // 5. Expose resize() to parent

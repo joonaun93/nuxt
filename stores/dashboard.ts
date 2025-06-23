@@ -4,34 +4,52 @@ import { ref } from "vue";
 
 type KPI = { label: string; value: number; unit?: string };
 
-export const useDashboard = defineStore("dashboard", () => {
-  const kpis = ref<KPI[]>([]);
-  const chartData = ref<{ month: string; value: number }[]>([]);
+interface EmissionMonth {
+  month: string; // e.g. “2025-06”
+  s1: number; // Scope 1  tCO₂e
+  s2: number; // Scope 2  tCO₂e
+  s3: number; // Scope 3  tCO₂e
+}
 
+export const useDashboard = defineStore("dashboard", () => {
+  /* ---------- state ---------- */
+  const series = ref<EmissionMonth[]>([]);
+  const kpis = ref<KPI[]>([]);
+  const chartData = ref<
+    { month: string; s1: number; s2: number; s3: number }[]
+  >([]);
+
+  /* ---------- actions ---------- */
   async function load() {
     const {
       public: { apiBase },
     } = useRuntimeConfig();
 
     try {
-      const r: {
-        total_tCO2e: number;
-        projects: number;
-        data_quality_pct: number;
-      } = await $fetch("/api/emissions/report/", {
+      series.value = await $fetch<EmissionMonth[]>("/api/emissions/report", {
         baseURL: apiBase as string,
       });
 
-      kpis.value = [
-        { label: "Total tCO₂e", value: r.total_tCO2e, unit: "t" },
-        { label: "Projects", value: r.projects },
-        { label: "Data Quality %", value: r.data_quality_pct, unit: "%" },
-      ];
+      const latest = series.value.at(-1);
+      const total3Mo = series.value.reduce(
+        (sum, m) => sum + m.s1 + m.s2 + m.s3,
+        0
+      );
 
-      // stub trend – duplicate total 5× just for the chart
-      chartData.value = ["Jan", "Feb", "Mar", "Apr", "May"].map((m, i) => ({
-        month: m,
-        value: r.total_tCO2e - i * 200,
+      kpis.value = latest
+        ? [
+            { label: "Scope 1", value: latest.s1, unit: "t" },
+            { label: "Scope 2", value: latest.s2, unit: "t" },
+            { label: "Scope 3", value: latest.s3, unit: "t" },
+            { label: "3-mo Total", value: total3Mo, unit: "t" },
+          ]
+        : [];
+
+      chartData.value = series.value.map((m) => ({
+        month: m.month,
+        s1: m.s1,
+        s2: m.s2,
+        s3: m.s3,
       }));
     } catch (e) {
       console.error("API fetch failed ⇒ falling back to dummy numbers", e);
@@ -42,5 +60,5 @@ export const useDashboard = defineStore("dashboard", () => {
   // hydrate immediately on client+server render
   load();
 
-  return { kpis, chartData };
+  return { series, kpis, chartData };
 });
