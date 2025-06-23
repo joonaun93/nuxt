@@ -2,7 +2,12 @@ import { defineStore } from "pinia";
 import { useRuntimeConfig } from "#imports";
 import { ref } from "vue";
 
-type KPI = { label: string; value: number; unit?: string };
+type KPI = {
+  label: string;
+  value: number;
+  unit?: string;
+  delta?: number | null;
+};
 
 interface EmissionMonth {
   month: string; // e.g. “2025-06”
@@ -36,6 +41,8 @@ export const useDashboard = defineStore("dashboard", () => {
       series.value = res.data;
 
       const latest = series.value.at(-1);
+      const previous = series.value.length > 1 ? series.value.at(-2) : null;
+
       const total3Mo = series.value.reduce(
         (sum, m) => sum + m.s1 + m.s2 + m.s3,
         0
@@ -43,10 +50,30 @@ export const useDashboard = defineStore("dashboard", () => {
 
       kpis.value = latest
         ? [
-            { label: "Scope 1", value: latest.s1, unit: "t" },
-            { label: "Scope 2", value: latest.s2, unit: "t" },
-            { label: "Scope 3", value: latest.s3, unit: "t" },
-            { label: "3-mo Total", value: total3Mo, unit: "t" },
+            {
+              label: "Scope 1",
+              value: latest.s1,
+              unit: "tCO₂e",
+              delta: previous ? latest.s1 - previous.s1 : null,
+            },
+            {
+              label: "Scope 2",
+              value: latest.s2,
+              unit: "tCO₂e",
+              delta: previous ? latest.s2 - previous.s2 : null,
+            },
+            {
+              label: "Scope 3",
+              value: latest.s3,
+              unit: "tCO₂e",
+              delta: previous ? latest.s3 - previous.s3 : null,
+            },
+            {
+              label: "3-mo Total",
+              value: total3Mo,
+              unit: "tCO₂e",
+              delta: null,
+            },
           ]
         : [];
 

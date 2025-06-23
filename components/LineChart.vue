@@ -77,12 +77,12 @@ const options = {
     legend: { position: "bottom" },
     tooltip: {
       callbacks: {
-        label: (ctx) => `${ctx.dataset.label}: ${ctx.formattedValue} t`,
+        label: (ctx) => `${ctx.dataset.label}: ${ctx.formattedValue} tCO₂e`,
       },
     },
   },
   scales: {
-    y: { ticks: { callback: (v) => v + " t" } },
+    y: { ticks: { callback: (v) => v + " tCO₂e" } },
   },
 };
 
