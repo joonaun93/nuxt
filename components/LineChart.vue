@@ -94,7 +94,7 @@ const options = {
 
 <template>
   <div
-    class="w-full sm:w-3/4 mx-auto aspect-w-16 aspect-h-9 rounded-xl bg-white shadow p-4"
+    class="w-full sm:w-3/4 mx-auto h-56 sm:h-auto sm:aspect-w-16 sm:aspect-h-9 rounded-xl bg-white shadow p-4"
   >
     <Line
       ref="chartRef"

@@ -10,7 +10,7 @@ const { kpis, chartData } = storeToRefs(dashboard);
 
 <template>
   <!-- Page padding + light background -->
-  <div class="min-h-screen bg-gray-50 p-8 space-y-8">
+  <div class="min-h-screen bg-gray-50 p-3 sm:p-8 space-y-8">
     <h1 class="text-2xl font-semibold">GHG Emissions (Scopes 1 • 2 • 3)</h1>
 
     <!-- KPI grid -->

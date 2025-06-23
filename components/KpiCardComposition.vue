@@ -9,7 +9,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="flex flex-col gap-1 rounded-xl bg-white shadow p-4 w-full">
+  <div class="flex flex-col gap-1 rounded-xl bg-white shadow p-3 sm:p-4 w-full">
     <span class="text-xs text-gray-500">{{ label }}</span>
 
     <div class="flex items-baseline gap-1">
