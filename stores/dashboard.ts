@@ -26,9 +26,14 @@ export const useDashboard = defineStore("dashboard", () => {
     } = useRuntimeConfig();
 
     try {
-      series.value = await $fetch<EmissionMonth[]>("/api/emissions/report", {
-        baseURL: apiBase as string,
-      });
+      const res = await $fetch<{
+        data: EmissionMonth[];
+        total_tCO2e: number;
+        projects: number;
+        data_quality_pct: number;
+      }>("/api/emissions/report", { baseURL: apiBase });
+
+      series.value = res.data;
 
       const latest = series.value.at(-1);
       const total3Mo = series.value.reduce(
