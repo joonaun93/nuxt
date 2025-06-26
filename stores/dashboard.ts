@@ -43,10 +43,12 @@ export const useDashboard = defineStore("dashboard", () => {
       const latest = series.value.at(-1);
       const previous = series.value.length > 1 ? series.value.at(-2) : null;
 
-      const total3Mo = series.value.reduce(
-        (sum, m) => sum + m.s1 + m.s2 + m.s3,
-        0
-      );
+      const total3Mo = series.value.reduce((sum, m, i) => {
+        if (i < series.value.length - 3) {
+          return sum;
+        }
+        return sum + m.s1 + m.s2 + m.s3;
+      }, 0);
 
       kpis.value = latest
         ? [
