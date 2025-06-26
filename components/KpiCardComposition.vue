@@ -19,7 +19,7 @@ defineProps<{
 
       <span
         v-if="delta !== null"
-        :class="delta >= 0 ? 'text-emerald-600' : 'text-rose-600'"
+        :class="delta <= 0 ? 'text-emerald-600' : 'text-rose-600'"
         class="text-sm font-medium"
       >
         {{ delta >= 0 ? "▲" : "▼" }}
